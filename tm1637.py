@@ -4,92 +4,105 @@ import time
 CLK = 11
 DIO = 12
 
-GPIO.cleanup()
-GPIO.setmode(GPIO.BOARD)
+class TM1637:
+    __clk = 0
+    __dio = 0
+    __brightness = 4
+    __point_on = False
+    __display_data = ['8', '8', '8', '8']
+    
+    def __init__(self, clk, dio, brightness=4):
+        self.__clk = clk
+        self.__dio = dio
+        self.__brightness = brightness
 
-GPIO.setup(CLK, GPIO.OUT)
-GPIO.setup(DIO, GPIO.OUT)
+        GPIO.cleanup()
+        GPIO.setmode(GPIO.BOARD)
 
-def delay_ms():
-    time.sleep(0.001)
-    
-def i2c_start():
-    GPIO.output(CLK, GPIO.HIGH)
-    GPIO.output(DIO, GPIO.HIGH)
-    delay_ms()
-    GPIO.output(DIO, GPIO.LOW)
-    delay_ms()
-    
-def i2c_stop():
-    GPIO.output(CLK, GPIO.LOW)
-    delay_ms()
-    GPIO.output(DIO, GPIO.LOW)
-    delay_ms()
-    GPIO.output(CLK, GPIO.HIGH)
-    delay_ms()
-    GPIO.output(DIO, GPIO.HIGH)
-    delay_ms()
+        GPIO.setup(self.__clk, GPIO.OUT)
+        GPIO.setup(self.__dio, GPIO.OUT)
 
-def i2c_ask():
-    GPIO.output(CLK, GPIO.LOW)
-    delay_ms()
+    def delay_ms(self):
+        time.sleep(0.001)
     
-    # set data pin as input
-    GPIO.setup(DIO, GPIO.IN)
-    delay_ms()
+    def i2c_start(self):
+        GPIO.output(self.__clk, GPIO.HIGH)
+        GPIO.output(self.__dio, GPIO.HIGH)
+        self.delay_ms()
+        GPIO.output(self.__dio, GPIO.LOW)
+        self.delay_ms()
     
-    count = 10
+    def i2c_stop(self):
+        GPIO.output(self.__clk, GPIO.LOW)
+        self.delay_ms()
+        GPIO.output(self.__dio, GPIO.LOW)
+        self.delay_ms()
+        GPIO.output(self.__clk, GPIO.HIGH)
+        self.delay_ms()
+        GPIO.output(self.__dio, GPIO.HIGH)
+        self.delay_ms()
+
+    def i2c_ack(self):
+        GPIO.output(self.__clk, GPIO.LOW)
+        self.delay_ms()
     
-    # read ack signal
-    while GPIO.input(DIO) and count:
-        delay_ms()
-        print count
-        count = count - 1
+        # set data pin as input
+        GPIO.setup(self.__dio, GPIO.IN)
+        self.delay_ms()
     
-    GPIO.output(CLK, GPIO.HIGH)
-    delay_ms()
-    GPIO.output(CLK, GPIO.LOW)
-    delay_ms()
-    
-    # set data pin as output
-    GPIO.setup(DIO, GPIO.OUT)
-    delay_ms()
-    
-def i2c_write_byte(data):
-    for i in range(8):
-        GPIO.output(CLK, GPIO.LOW)
-        delay_ms()
-        if data & 0x01:
-            GPIO.output(DIO, GPIO.HIGH)
-        else:
-            GPIO.output(DIO, GPIO.LOW)
-        delay_ms()
-        data >>= 1
-        GPIO.output(CLK, GPIO.HIGH)
-        delay_ms()
+        count = 10
         
-def led8_display(value):
-    i2c_start()
-    i2c_write_byte(0x40) # 0x40 - auto address ; 0x44 - fixed address
-    i2c_ask()
-    i2c_stop()
+        # read ack signal
+        while GPIO.input(self.__dio) and count:
+            self.delay_ms()
+            print count
+            count = count - 1
+        
+        GPIO.output(self.__clk, GPIO.HIGH)
+        self.delay_ms()
+        GPIO.output(self.__clk, GPIO.LOW)
+        self.delay_ms()
+        
+        # set data pin as output
+        GPIO.setup(self.__dio, GPIO.OUT)
+        self.delay_ms()
     
-    i2c_start()
-    i2c_write_byte(0xc0) # set start address
-    i2c_ask()
-    for i in range(4):
-        i2c_write_byte(value)
-        i2c_ask()
-    i2c_stop()
-    
-    i2c_start()
-    i2c_write_byte(0x88) # set maxium brightness
-    i2c_ask()
-    time.sleep(1)
-    i2c_stop()
+    def i2c_write_byte(self, data):
+        for i in range(8):
+            GPIO.output(self.__clk, GPIO.LOW)
+            self.delay_ms()
+            if data & 0x01:
+                GPIO.output(self.__dio, GPIO.HIGH)
+            else:
+                GPIO.output(self.__dio, GPIO.LOW)
+            self.delay_ms()
+            data >>= 1
+            GPIO.output(self.__clk, GPIO.HIGH)
+            self.delay_ms()
+            
+    def led8_display(self, value):
+        self.i2c_start()
+        self.i2c_write_byte(0x40) # 0x40 - auto address ; 0x44 - fixed address
+        self.i2c_ack()
+        self.i2c_stop()
+        
+        self.i2c_start()
+        self.i2c_write_byte(0xc0) # set start address
+        self.i2c_ack()
+        for i in range(4):
+            self.i2c_write_byte(value)
+            self.i2c_ack()
+        self.i2c_stop()
+        
+        self.i2c_start()
+        self.i2c_write_byte(0x88) # set maxium brightness
+        self.i2c_ack()
+        time.sleep(1)
+        self.i2c_stop()
 
 def main():
-    led8_display(0x7f)
+    led8 = TM1637(CLK, DIO)
+    led8.led8_display(0x7f)
     print "press any key to exit...wait for 2 seconds"
     #r = raw_input()
     time.sleep(1)
