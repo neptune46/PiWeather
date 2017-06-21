@@ -81,19 +81,24 @@ class TM1637:
             self.delay_ms()
             
     def led8_display(self, value):
+        # write command1 - set address mode
         self.i2c_start()
         self.i2c_write_byte(0x40) # 0x40 - auto address ; 0x44 - fixed address
         self.i2c_ack()
         self.i2c_stop()
         
+        # write command2 - set start address
         self.i2c_start()
-        self.i2c_write_byte(0xc0) # set start address
+        self.i2c_write_byte(0xc0) # address range: 0xc0 ~ 0xc6
         self.i2c_ack()
+        
+        # write command data
         for i in range(4):
             self.i2c_write_byte(value)
             self.i2c_ack()
         self.i2c_stop()
         
+        # write command 3 - control brightness 
         self.i2c_start()
         self.i2c_write_byte(0x88) # set maxium brightness
         self.i2c_ack()
