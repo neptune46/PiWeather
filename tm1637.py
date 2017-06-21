@@ -4,13 +4,48 @@ import time
 CLK = 11
 DIO = 12
 
+"""
+      A
+     ---
+  F |   | B
+     -G-
+  E |   | C
+     ---
+      D
+
+"""
+
+digital_coding = {
+    '0': 0x3f,
+    '1': 0x06,
+    '2': 0x5b,
+    '3': 0x4f,
+    '4': 0x66,
+    '5': 0x6d,
+    '6': 0x7d,
+    '7': 0x07,
+    '8': 0x7f,
+    '9': 0x6f,
+    'A': 0x77,
+    'a': 0x77,
+    'B': 0x7c,
+    'b': 0x7c,
+    'C': 0x39,
+    'c': 0x39,
+    'D': 0x5e,
+    'd': 0x5e,
+    'E': 0x79,
+    'e': 0x79,
+    'F': 0x71,
+    'f': 0x71,
+    '-': 0x40
+}
+
 class TM1637:
     __clk = 0
     __dio = 0
     __brightness = 4
-    __point_on = False
-    __display_data = ['8', '8', '8', '8']
-    
+
     def __init__(self, clk, dio, brightness=4):
         self.__clk = clk
         self.__dio = dio
@@ -49,13 +84,11 @@ class TM1637:
         # set data pin as input
         GPIO.setup(self.__dio, GPIO.IN)
         self.delay_ms()
-    
-        count = 10
-        
+
         # read ack signal
+        count = 10
         while GPIO.input(self.__dio) and count:
             self.delay_ms()
-            print count
             count = count - 1
         
         GPIO.output(self.__clk, GPIO.HIGH)
@@ -80,7 +113,7 @@ class TM1637:
             GPIO.output(self.__clk, GPIO.HIGH)
             self.delay_ms()
             
-    def led8_display(self, value):
+    def display_digit(self, value):
         # write command1 - set address mode
         self.i2c_start()
         self.i2c_write_byte(0x40) # 0x40 - auto address ; 0x44 - fixed address
@@ -94,7 +127,8 @@ class TM1637:
         
         # write command data
         for i in range(4):
-            self.i2c_write_byte(value)
+            code = digital_coding[value[i]]
+            self.i2c_write_byte(code)
             self.i2c_ack()
         self.i2c_stop()
         
@@ -102,12 +136,16 @@ class TM1637:
         self.i2c_start()
         self.i2c_write_byte(0x88) # set maxium brightness
         self.i2c_ack()
-        time.sleep(1)
+        time.sleep(2)
         self.i2c_stop()
 
 def main():
-    led8 = TM1637(CLK, DIO)
-    led8.led8_display(0x7f)
+    led = TM1637(CLK, DIO)
+    led.display_digit(['0', '1', '2', '3'])
+    led.display_digit(['4', '5', '6', '7'])
+    led.display_digit(['8', '9', 'A', 'B'])
+    led.display_digit(['C', 'D', 'E', 'F'])
+    led.display_digit(['-', '-', '-', '-'])
     print "press any key to exit...wait for 2 seconds"
     #r = raw_input()
     time.sleep(1)
