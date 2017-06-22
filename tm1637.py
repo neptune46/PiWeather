@@ -35,7 +35,8 @@ digital_coding = {
     'e': 0x79,
     'F': 0x71,
     'f': 0x71,
-    '-': 0x40
+    '-': 0x40,
+    ' ': 0x00
 }
 
 class TM1637:
@@ -54,6 +55,7 @@ class TM1637:
         GPIO.setup(self.__dio, GPIO.OUT)
         
     def __del__(self):
+        self.clear()
         print "clean up GPIO..."
         GPIO.cleanup()
 
@@ -140,6 +142,8 @@ class TM1637:
         #self.i2c_stop()
 
     def clear(self):
+        self.display_digit([' ', ' ', ' ', ' '])
+        self.delay_ms()
         self.i2c_stop()
 
 
