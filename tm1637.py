@@ -136,7 +136,10 @@ class TM1637:
         self.i2c_start()
         self.i2c_write_byte(0x88) # set maxium brightness
         self.i2c_ack()
-        time.sleep(1)
+        self.delay_ms()
+        #self.i2c_stop()
+
+    def clear(self):
         self.i2c_stop()
 
 
