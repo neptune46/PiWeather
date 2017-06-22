@@ -48,11 +48,14 @@ class TM1637:
         self.__dio = dio
         self.__brightness = brightness
 
-        GPIO.cleanup()
         GPIO.setmode(GPIO.BOARD)
 
         GPIO.setup(self.__clk, GPIO.OUT)
         GPIO.setup(self.__dio, GPIO.OUT)
+        
+    def __del__(self):
+        print "clean up GPIO..."
+        GPIO.cleanup()
 
     def delay_ms(self):
         time.sleep(0.001)
@@ -135,6 +138,5 @@ class TM1637:
         self.i2c_ack()
         time.sleep(1)
         self.i2c_stop()
-
 
 
