@@ -1,5 +1,6 @@
 import temperature
 import condition
+import hefengapi
 import time
 import RPi.GPIO as GPIO
 
@@ -39,7 +40,11 @@ def main():
     day3 = [CODE_SHOWER_RAIN, 19, 24]
     data = [day1, day2, day3]
     wth.update(data)
-    time.sleep(5)
+    time.sleep(1)
+
+    data = hefengapi.getWeather()
+    wth.update(data)
+    time.sleep(10)
 
     wth.clear()
 
