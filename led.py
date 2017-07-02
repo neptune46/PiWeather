@@ -4,9 +4,17 @@
 import RPi.GPIO as GPIO
 import time
 
-DS = 33
-STCP = 35
-SHCP = 37
+SHCP1 = 29
+STCP1 = 31
+DS1   = 32
+
+SHCP2 = 33
+STCP2 = 35
+DS2   = 37
+
+SHCP3 = 36
+STCP3 = 38
+DS3   = 40
 
 class LED8:
     
@@ -49,10 +57,14 @@ class LED8:
 
 
 def test():
-    led = LED8(DS, SHCP, STCP)
-    for i in range(0, 32):
-        led.setByte(i)
-        time.sleep(10)
+    led1 = LED8(DS1, SHCP1, STCP1)
+    led2 = LED8(DS2, SHCP2, STCP2)
+    led3 = LED8(DS3, SHCP3, STCP3)
+    for i in range(0, 256):
+        led1.setByte(i)
+        led2.setByte(i)
+        led3.setByte(i)
+        time.sleep(0.1)
         
 if __name__ == "__main__": 
     try:
