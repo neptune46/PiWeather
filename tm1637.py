@@ -1,6 +1,15 @@
 import RPi.GPIO as GPIO
 import time
 
+CLK1 = 11
+DIO1 = 12
+
+CLK2 = 13
+DIO2 = 15
+
+CLK3 = 16
+DIO3 = 18
+
 """
       A
      ---
@@ -144,4 +153,6 @@ class TM1637:
         self.delay_ms()
         self.i2c_stop()
 
-
+ssd1 = TM1637(CLK1, DIO1)
+ssd2 = TM1637(CLK2, DIO2)
+ssd3 = TM1637(CLK3, DIO3)

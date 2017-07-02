@@ -2,16 +2,6 @@ import tm1637
 import time
 import RPi.GPIO as GPIO
 
-CLK1 = 11
-DIO1 = 12
-
-CLK2 = 13
-DIO2 = 15
-
-CLK3 = 16
-DIO3 = 18
-
-
 # 4 digits Seven-Segment-Display for Mininum/Maximum temperature (-9~99)
 
 class TempDisplay:
@@ -40,10 +30,12 @@ class TempDisplay:
 
     def clear(self):
         self.__ssd.clear()
-        
-def test(ssd):
-    
-    tempDisp = TempDisplay(ssd)
+
+tempDisp1 = TempDisplay(tm1637.ssd1)
+tempDisp2 = TempDisplay(tm1637.ssd2)
+tempDisp3 = TempDisplay(tm1637.ssd3)
+
+def test(tempDisp):
 
     tempDisp.setTemp(21, 30)
     time.sleep(0.1)
@@ -74,14 +66,13 @@ def test(ssd):
 if __name__ == "__main__": 
     try:
         GPIO.setmode(GPIO.BOARD)
-        ssd1 = tm1637.TM1637(CLK1, DIO1)
-        test(ssd1)
-        ssd2 = tm1637.TM1637(CLK2, DIO2)
-        test(ssd2)
-        ssd3 = tm1637.TM1637(CLK3, DIO3)
-        test(ssd3)
+        test(tempDisp1)
+        test(tempDisp2)
+        test(tempDisp3)
     except KeyboardInterrupt: 
         print "key board interrupt!"
+        print "clean up GPIO..."
+        GPIO.cleanup()
     
     print "clean up GPIO..."
     GPIO.cleanup()

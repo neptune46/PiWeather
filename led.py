@@ -23,7 +23,7 @@ class LED8:
         self.__pin_shcp = shcp
         self.__pin_stcp = stcp
         
-        #GPIO.setmode(GPIO.BOARD)
+        GPIO.setmode(GPIO.BOARD)
 
         GPIO.setup(self.__pin_ds, GPIO.OUT)
         GPIO.setup(self.__pin_shcp, GPIO.OUT)
@@ -33,7 +33,8 @@ class LED8:
 
 
     def __del__(self):
-        self.setByte(0x00)
+        print "led clean up ..."
+        #self.setByte(0x00)
         
     def delay_ms(self):
         time.sleep(0.001)
@@ -53,17 +54,22 @@ class LED8:
         GPIO.output(self.__pin_stcp, True)
         GPIO.output(self.__pin_stcp, False)
 
+    def clear(self):
+        self.setByte(0x00)
+
+led1 = LED8(DS1, SHCP1, STCP1)
+led2 = LED8(DS2, SHCP2, STCP2)
+led3 = LED8(DS3, SHCP3, STCP3)
 
 def test():
-    GPIO.setmode(GPIO.BOARD)
-    led1 = LED8(DS1, SHCP1, STCP1)
-    led2 = LED8(DS2, SHCP2, STCP2)
-    led3 = LED8(DS3, SHCP3, STCP3)
     for i in range(0, 130):
         led1.setByte(i)
         led2.setByte(i)
         led3.setByte(i)
         time.sleep(0.1)
+    led1.clear()
+    led2.clear()
+    led3.clear()
         
 if __name__ == "__main__": 
     try:
