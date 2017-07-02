@@ -23,7 +23,7 @@ class LED8:
         self.__pin_shcp = shcp
         self.__pin_stcp = stcp
         
-        GPIO.setmode(GPIO.BOARD)
+        #GPIO.setmode(GPIO.BOARD)
 
         GPIO.setup(self.__pin_ds, GPIO.OUT)
         GPIO.setup(self.__pin_shcp, GPIO.OUT)
@@ -34,8 +34,6 @@ class LED8:
 
     def __del__(self):
         self.setByte(0x00)
-        print "cleanup GPIO"
-        GPIO.cleanup()
         
     def delay_ms(self):
         time.sleep(0.001)
@@ -57,10 +55,11 @@ class LED8:
 
 
 def test():
+    GPIO.setmode(GPIO.BOARD)
     led1 = LED8(DS1, SHCP1, STCP1)
     led2 = LED8(DS2, SHCP2, STCP2)
     led3 = LED8(DS3, SHCP3, STCP3)
-    for i in range(0, 256):
+    for i in range(0, 130):
         led1.setByte(i)
         led2.setByte(i)
         led3.setByte(i)
@@ -71,5 +70,7 @@ if __name__ == "__main__":
         test()
     except KeyboardInterrupt: 
         print "key board interrupt!"
-
+    
+    print "cleanup GPIO"
+    GPIO.cleanup()
     print "exit..."

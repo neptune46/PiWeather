@@ -46,31 +46,34 @@ def test(ssd):
     tempDisp = TempDisplay(ssd)
 
     tempDisp.setTemp(21, 30)
-    time.sleep(1)
+    time.sleep(0.1)
 
     tempDisp.setTemp(17, 29)
-    time.sleep(1)
+    time.sleep(0.1)
 
     tempDisp.setTemp(-5, -2)
-    time.sleep(1)
+    time.sleep(0.1)
 
     tempDisp.setTemp(0, 1)
-    time.sleep(1)
+    time.sleep(0.1)
 
     tempDisp.setTemp(-1, 8)
-    time.sleep(1)
+    time.sleep(0.1)
 
     tempDisp.setTemp(-10, 8)
-    time.sleep(1)
+    time.sleep(0.1)
 
     tempDisp.setTemp(-8, 9)
-    time.sleep(1)
+    time.sleep(0.1)
 
     tempDisp.setTemp(-18, 120)
-    time.sleep(1)
+    time.sleep(0.1)
+
+    tempDisp.clear()
     
 if __name__ == "__main__": 
     try:
+        GPIO.setmode(GPIO.BOARD)
         ssd1 = tm1637.TM1637(CLK1, DIO1)
         test(ssd1)
         ssd2 = tm1637.TM1637(CLK2, DIO2)
@@ -79,5 +82,7 @@ if __name__ == "__main__":
         test(ssd3)
     except KeyboardInterrupt: 
         print "key board interrupt!"
-
+    
+    print "clean up GPIO..."
+    GPIO.cleanup()
     print "exit..."

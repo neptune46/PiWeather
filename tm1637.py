@@ -50,14 +50,12 @@ class TM1637:
         self.__brightness = brightness
 
         GPIO.setmode(GPIO.BOARD)
-
         GPIO.setup(self.__clk, GPIO.OUT)
         GPIO.setup(self.__dio, GPIO.OUT)
         
     def __del__(self):
-        self.clear()
-        print "clean up GPIO..."
-        GPIO.cleanup()
+        print "tm1637 clear..."
+        #self.clear()
 
     def delay_ms(self):
         time.sleep(0.001)
