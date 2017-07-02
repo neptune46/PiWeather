@@ -17,7 +17,7 @@ class Condition:
         elif n == 2:
             self.__led = led.led3
         else:
-            print "invalid led number! valid range is 0~2"
+            print "ERROR: invalid led number! valid range is 0~2"
             self.__valid = False
     
     def __del__(self):

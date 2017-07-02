@@ -58,9 +58,9 @@ def testCondition():
     condi3.clear()
 
 def testAirTemp():
-    airTemp1 = temperature.tempDisp1
-    airTemp2 = temperature.tempDisp2
-    airTemp3 = temperature.tempDisp3
+    airTemp1 = temperature.TempDisplay(0)
+    airTemp2 = temperature.TempDisplay(1)
+    airTemp3 = temperature.TempDisplay(2)
     temperature.test(airTemp1)
     temperature.test(airTemp2)
     temperature.test(airTemp3)

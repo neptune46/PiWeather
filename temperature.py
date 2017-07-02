@@ -7,16 +7,27 @@ import RPi.GPIO as GPIO
 class TempDisplay:
     __temp_min = 0
     __temp_max = 0
-    
-    def __init__(self, ssd):
-        self.__ssd = ssd
+    __valid = False
+
+    def __init__(self, n):
+        self.__valid =  True
+        if n == 0:
+            self.__ssd = tm1637.ssd1
+        elif n == 1:
+            self.__ssd = tm1637.ssd2
+        elif n == 2:
+            self.__ssd = tm1637.ssd3
+        else:
+            print "ERROR: invalid ssd number!! valid range is 0~2"
+            self.__valid = False
         
     def setTemp(self, min, max):
-        self.__temp_min = min
-        self.__temp_max = max
-        min_symbol = self.val2sym(self.__temp_min)
-        max_symbol = self.val2sym(self.__temp_max)
-        self.__ssd.display_digit(min_symbol + max_symbol)
+        if self.__valid == True:
+            self.__temp_min = min
+            self.__temp_max = max
+            min_symbol = self.val2sym(self.__temp_min)
+            max_symbol = self.val2sym(self.__temp_max)
+            self.__ssd.display_digit(min_symbol + max_symbol)
 
     def val2sym(self, val):
         if val>=0 and val <=99:
@@ -29,11 +40,8 @@ class TempDisplay:
             return ['-', '-']
 
     def clear(self):
-        self.__ssd.clear()
-
-tempDisp1 = TempDisplay(tm1637.ssd1)
-tempDisp2 = TempDisplay(tm1637.ssd2)
-tempDisp3 = TempDisplay(tm1637.ssd3)
+        if self.__valid == True:
+            self.__ssd.clear()
 
 def test(tempDisp):
 
@@ -66,9 +74,9 @@ def test(tempDisp):
 if __name__ == "__main__": 
     try:
         GPIO.setmode(GPIO.BOARD)
-        test(tempDisp1)
-        test(tempDisp2)
-        test(tempDisp3)
+        test(TempDisplay(0))
+        test(TempDisplay(1))
+        test(TempDisplay(2))
     except KeyboardInterrupt: 
         print "key board interrupt!"
         print "clean up GPIO..."
