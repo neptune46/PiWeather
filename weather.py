@@ -1,4 +1,3 @@
-import led
 import temperature
 import condition
 import time
@@ -40,7 +39,9 @@ def main():
     day3 = [CODE_SHOWER_RAIN, 19, 24]
     data = [day1, day2, day3]
     wth.update(data)
-    time.sleep(1)
+    time.sleep(5)
+
+    wth.clear()
 
     
 if __name__ == "__main__": 
