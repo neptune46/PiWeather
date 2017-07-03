@@ -4,15 +4,6 @@ import hefengapi
 import time
 import RPi.GPIO as GPIO
 
-CODE_SUNNY = 0
-CODE_CLOUDY = 1
-CODE_PARTLY_CLOUDY = 2
-CODE_OVERCAST = 3
-CODE_SHOWER_RAIN = 4
-CODE_LIGHT_RAIN = 5
-CODE_MODERATE_RAIN = 6
-CODE_HEAVY_RAIN = 7
-
 class Weather:
     __weatherCondi = [0, 0, 0]
     __airTemp = [0, 0, 0]
@@ -35,17 +26,9 @@ class Weather:
 def main():
     print "start..."
     wth = Weather()
-    day1 = [CODE_SUNNY, 22, 32]
-    day2 = [CODE_OVERCAST, 18, 27]
-    day3 = [CODE_SHOWER_RAIN, 19, 24]
-    data = [day1, day2, day3]
-    wth.update(data)
-    time.sleep(1)
-
     data = hefengapi.getWeather()
     wth.update(data)
-    time.sleep(10)
-
+    time.sleep(20)
     wth.clear()
 
     
