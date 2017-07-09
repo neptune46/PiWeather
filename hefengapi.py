@@ -73,24 +73,46 @@ def getWeather():
     weather = response.read()
     dataJSON = json.loads(weather)
 
+    code = [
+        [
+            dataJSON["HeWeather5"][0]["daily_forecast"][0]["cond"]["code_d"],
+            dataJSON["HeWeather5"][0]["daily_forecast"][0]["tmp"]["min"],
+            dataJSON["HeWeather5"][0]["daily_forecast"][0]["tmp"]["max"]
+        ],
+        [
+            dataJSON["HeWeather5"][0]["daily_forecast"][1]["cond"]["code_d"],
+            dataJSON["HeWeather5"][0]["daily_forecast"][1]["tmp"]["min"],
+            dataJSON["HeWeather5"][0]["daily_forecast"][1]["tmp"]["max"]
+        ],
+        [
+            dataJSON["HeWeather5"][0]["daily_forecast"][2]["cond"]["code_d"],
+            dataJSON["HeWeather5"][0]["daily_forecast"][2]["tmp"]["min"],
+            dataJSON["HeWeather5"][0]["daily_forecast"][2]["tmp"]["max"]
+        ]
+    ]
+
+    # print code
+
     day1 = [
-        codeMap[dataJSON["HeWeather5"][0]["daily_forecast"][0]["cond"]["code_n"]],
-        int(dataJSON["HeWeather5"][0]["daily_forecast"][0]["tmp"]["min"]),
-        int(dataJSON["HeWeather5"][0]["daily_forecast"][0]["tmp"]["max"]),
+        codeMap[code[0][0]],
+        int(code[0][1]),
+        int(code[0][2]),
     ]
 
     day2 = [
-        codeMap[dataJSON["HeWeather5"][0]["daily_forecast"][1]["cond"]["code_n"]],
-        int(dataJSON["HeWeather5"][0]["daily_forecast"][1]["tmp"]["min"]),
-        int(dataJSON["HeWeather5"][0]["daily_forecast"][1]["tmp"]["max"])
+        codeMap[code[1][0]],
+        int(code[1][1]),
+        int(code[1][2])
     ]
 
     day3 = [
-        codeMap[dataJSON["HeWeather5"][0]["daily_forecast"][2]["cond"]["code_n"]],
-        int(dataJSON["HeWeather5"][0]["daily_forecast"][2]["tmp"]["min"]),
-        int(dataJSON["HeWeather5"][0]["daily_forecast"][2]["tmp"]["max"])
+        codeMap[code[2][0]],
+        int(code[2][1]),
+        int(code[2][2])
     ]
 
     data = [day1, day2, day3]
+
+    print data
 
     return data
