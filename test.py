@@ -25,7 +25,7 @@ def testLED():
         led1.setByte(i)
         led2.setByte(i)
         led3.setByte(i)
-        time.sleep(0.01)
+        time.sleep(0.1)
     led1.clear()
     led2.clear()
     led3.clear()
@@ -68,14 +68,14 @@ def testAirTemp():
     temperature.test(airTemp2)
     temperature.test(airTemp3)
 
-def test():
+def testAll():
     testLED()
     testAirTemp()
     testCondition()
     
 if __name__ == "__main__": 
     try:
-        test()
+        testAll()
     except KeyboardInterrupt: 
         print "key board interrupt!"
         print "cleanup GPIO ..."

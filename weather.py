@@ -4,7 +4,9 @@
 import temperature
 import condition
 import hefengapi
+import test
 import time
+import threading
 import RPi.GPIO as GPIO
 
 class Weather:
@@ -26,14 +28,27 @@ class Weather:
             self.__weatherCondi[i].clear()
             self.__airTemp[i].clear()
 
-def main():
-    print "start..."
-    wth = Weather()
+wth = Weather()
+#wth.update()
+
+def timer_start(n):
+    t = threading.Timer(n, refresh, ("",))
+    t.start()
+
+def refresh(msg):
+    print "refresh..."
+    wth.clear()
+    test.testAll()
     data = hefengapi.getWeather()
     wth.update(data)
-    time.sleep(20)
-    wth.clear()
+    timer_start(3600)
 
+def main():
+    print "start..."
+    test.testAll()
+    timer_start(1)
+    while True:
+        time.sleep(10)
     
 if __name__ == "__main__": 
     try:
@@ -41,6 +56,7 @@ if __name__ == "__main__":
     except KeyboardInterrupt: 
         print "key board interrupt!"
     
+    wth.clear()
     print "cleanup GPIO in exit..."
     GPIO.cleanup()
     print "exit..."
