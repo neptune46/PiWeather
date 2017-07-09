@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# encoding: utf-8
+
 import tm1637
 import time
 import RPi.GPIO as GPIO
