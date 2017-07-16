@@ -13,4 +13,4 @@ Raspberry Pi based weather forecast machine
 
 ## Test Video
 
-* ![video](https://github.com/neptune46/PiWeather/blob/master/pic/pw7s.mp4)
+* ![video](https://github.com/neptune46/PiWeather/blob/master/pic/pw7.gif)
